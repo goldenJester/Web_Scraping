@@ -2,22 +2,28 @@ from bs4 import BeautifulSoup
 import requests, json
 from datetime import datetime as dt
 
+dot_replace = lambda x: int(x.replace(".", ""))
+convert_time = lambda x: dt.strptime(x, "%H:%M")
+lambda_str = lambda x: str(x) if x != " " else None
+lambda_int = lambda x: dot_replace(x) if x != " " else None
+lambda_time = lambda x: convert_time(x) if x != " " else None
+
 mapping = {
     'Kodu': str,
-    'TEFAS İşlem Başlangıç Saati': str,
+    'TEFAS İşlem Başlangıç Saati': lambda_str,
     #lambda x:dt.strptime(x, "%H:%M"),
-    'Fon Alış Valörü': str,
-    'TEFAS Min. Alış İşlem Miktarı ': str,
-    'TEFAS Max. Alış İşlem Miktarı ': str, 
-    'TEFAS İşlem Durumu': str,
-    'Çıkış Komisyonu': str, 
-    'ISIN Kodu': str,
-    'TEFAS Son İşlem Saati': str,
-    #lambda x:dt.strptime(x, "%H:%M"),
-    'Fon Satış Valörü': str,
-    'TEFAS Min. Satış İşlem Miktarı ': str,
-    'TEFAS Max. Satış İşlem Miktarı ': str,
-    'Giriş Komisyonu': str
+    'Fon Alış Valörü': lambda_int,
+    'TEFAS Min. Alış İşlem Miktarı ': lambda_int,
+    'TEFAS Max. Alış İşlem Miktarı ': lambda_int, 
+    'TEFAS İşlem Durumu': lambda_str,
+    'Çıkış Komisyonu': lambda_str, 
+    'ISIN Kodu': lambda_str,
+    'TEFAS Son İşlem Saati': lambda_str,
+    # lambda x:dt.strptime(x, "%H:%M"),
+    'Fon Satış Valörü': lambda_int,
+    'TEFAS Min. Satış İşlem Miktarı ': lambda_int,
+    'TEFAS Max. Satış İşlem Miktarı ': lambda_int,
+    'Giriş Komisyonu': lambda_str
 }
 
 def getFundProfile(fund_code):
@@ -39,31 +45,25 @@ def getFundProfile(fund_code):
         headers += category.find('td', class_="fund-profile-header")
 
     profile = {}
+
     for i in range(len(headers)):
-        # profile[headers[i]] = values[i]
-        profile[headers[i]] = mapping[headers[i]](values[i])
-    
-    print(profile)
+        try:
+            #profile[headers[i]] = mapping[headers[i]](values[i])
+            profile[headers[i]] = values[i]
+        except Exception:
+            profile[headers[i]] = None
     return profile
 
-with open("funds.json", "r") as fp:
-    fund_codes = list(map(lambda x:x["FONKODU"], json.load(fp)["data"]))
+
+with open("/Users/arman/Desktop/Git/Web_Scraping/funds.json", "r") as fp:
+    fund_codes = list(map(lambda x: x["FONKODU"], json.load(fp)["data"]))
 
 
 fund_profile_dict = {}
 for f in fund_codes[:5]:
     r = getFundProfile(f)
+    #if r['TEFAS İşlem Durumu'] != 'İşlem Görmüyor':
     fund_profile_dict[f] = r
 
-with open("fund_profiles.json", "w", encoding='utf-8') as fp:
-    json.dump(fund_profile_dict, fp)
-
-
-
-
-
-
-
-
-
-
+with open("fund_profiles.json", "w", encoding='utf8') as fp:
+    json.dump(fund_profile_dict, fp, ensure_ascii=False)
