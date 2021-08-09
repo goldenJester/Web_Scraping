@@ -39,4 +39,5 @@
 
 - A perpetrator, lacking a budget to run substantial server duty, often resorts to using a **botnet—geographically dispersed computers, infected with the same malware and controlled from a central location**. Individual botnet computer owners are unaware of their participation. The combined power of the infected systems enables *large scale scraping of many different websites by the perpetrator*.
 
-![Kano Eitoku - Cypress Trees](https://upload.wikimedia.org/wikipedia/commons/4/47/Kano_Eitoku_-_Cypress_Trees.jpg)
+![Kano Eitoku - Cypress Trees](https://upload.wikimedia.org/wikipedia/commons/a/af/Wind-God-Fujin-and-Thunder-God-Raijin-by-Tawaraya-Sotatsu.png)
+
