@@ -48,8 +48,8 @@ def getFundProfile(fund_code):
 
     for i in range(len(headers)):
         try:
-            #profile[headers[i]] = mapping[headers[i]](values[i])
-            profile[headers[i]] = values[i]
+            profile[headers[i]] = mapping[headers[i]](values[i])
+            #profile[headers[i]] = values[i]
         except Exception:
             profile[headers[i]] = None
     return profile
@@ -60,10 +60,10 @@ with open("/Users/arman/Desktop/Git/Web_Scraping/funds.json", "r") as fp:
 
 
 fund_profile_dict = {}
-for f in fund_codes[:5]:
+for f in fund_codes:
     r = getFundProfile(f)
-    #if r['TEFAS İşlem Durumu'] != 'İşlem Görmüyor':
-    fund_profile_dict[f] = r
+    if r['TEFAS İşlem Durumu'] != 'İşlem Görmüyor':
+        fund_profile_dict[f] = r
 
 with open("fund_profiles.json", "w", encoding='utf8') as fp:
     json.dump(fund_profile_dict, fp, ensure_ascii=False)
